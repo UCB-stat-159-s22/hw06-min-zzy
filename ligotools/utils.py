@@ -1,5 +1,6 @@
 from scipy.io import wavfile
 import numpy as np
+import matplotlib.pyplot as plt
 
 # function to whiten data
 def whiten(strain, interp_psd, dt):
@@ -35,7 +36,8 @@ def reqshift(data,fshift=100,sample_rate=4096):
     z = np.fft.irfft(y)
     return z
 
-def plot_helper(make_plots, det, strain_L1_whitenbp, strain_H1_whitenbp, template_match, time, timemax, SNR, eventname,                  plottype, tevent,template_fft, datafreq, d_eff, freqs, data_psd, fs):
+# function that plot the graph that is in the index.ipynb file
+def plot_code(make_plots, det, strain_L1_whitenbp, strain_H1_whitenbp, template_match, time, timemax, SNR, eventname,                  plottype, tevent,template_fft, datafreq, d_eff, freqs, data_psd, fs):
 	if make_plots:
 
         # plotting changes for the detectors:
