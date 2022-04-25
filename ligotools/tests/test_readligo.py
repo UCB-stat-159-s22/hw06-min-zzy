@@ -1,11 +1,15 @@
 import ligotools as lg
 from ligotools import readligo as rl
-from ligotools.utils import write_wavfile, reqshift, whiten
+from ligotools.utils import write_wavfile, reqshift, whiten, plot_code
 #from readligo import FileList
 import matplotlib.mlab as mlab
 import json
 from ligotools import utils as ut
 from scipy.interpolate import interp1d
+import os
+from os import path
+import numpy as np
+from scipy.signal import butter, filtfilt
 
 fn_L1 = "data/L-L1_LOSC_4_V2-1126259446-32.hdf5"
 fn_H1 = "data/H-H1_LOSC_4_V2-1126259446-32.hdf5"
@@ -34,12 +38,41 @@ events = json.load(open(fnjson,"r"))
 event = events[eventname]
 fs = event['fs'] 
 NFFT = 4*fs
+time = time_H1
+psd_window = np.blackman(NFFT)
+NOVL = NFFT/2
+fband = [43.0, 300.0]
+bb, ab = butter(4, [fband[0]*2./fs, fband[1]*2./fs], btype='band')
+normalization = np.sqrt((fband[1]-fband[0])/(fs/2))
 Pxx_H1, freqs = mlab.psd(strain_H1, Fs = fs, NFFT = NFFT)
+Pxx_L1, freqs = mlab.psd(strain_L1, Fs = fs, NFFT = NFFT)
 psd_H1 = interp1d(freqs, Pxx_H1)
-dt = time_H1[1] - time_H1[0]
-def test_whiten():
-    WH = whiten(strain_H1,psd_H1,dt)
-    assert len(starin_H1_whiten) == 131072
+psd_L1 = interp1d(freqs, Pxx_L1)
+dt_H1 = time_H1[1] - time_H1[0]
+dt_L1 = time_H1[1] - time_H1[0]
 
-#def test_write_wavfile():
-#write_wavfile("audio/temp.wav", fs, data)
+
+def test_whiten():
+	wh = whiten(strain_H1, psd_H1, dt_H1)
+    assert len(wh) == 131072
+
+def test_write_wavfile():
+	wh = whiten(strain_H1, psd_H1, dt_H1)
+	write_wavfile("audio/temp.wav", 4096, wh)
+	assert path.isfile('audio/GW150914_H1_whitenbp.wav') == True
+
+def test_reqshift():
+	wl = whiten(strin_L1, psd_L1, dt_L1)
+	strain_L1_shift = reqshift(wl, 400.0, 4096)
+	assert len(strain_L1_shift) == 131072
+
+# test whehter the plot exists or not(replace variables with arbitrary numbers)
+def test_plot_code():
+	wl = whiten(strain_L1, psd_L1, dt_L1)
+	strain_L1_whitenbp = filtfilt(bb, ab, wl) / normalization
+	plot_code(0, 0, 1126259462.4324, 13.2, 'GW150914', 'png', 
+                        1126259462.44, 0, 0, 999.74, 0, 0, 4096, 'g', 'L1', strain_L1_whitenbp)
+	assert exists('figures/'+'GW150914'+"_"+"L1"+"_matchtime."+"png")
+	remove('figures/'+'GW150914'+"_"+"L1"+"_matchtime."+"png")
+	
+	
