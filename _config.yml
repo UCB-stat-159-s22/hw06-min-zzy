@@ -18,15 +18,15 @@ only_build_toc_files: true
 # Sphinx section commented out for now as per above todo, will activate it
 # later. 
 
-bibtex_bibfiles: 
-  - references.bib
+#bibtex_bibfiles: 
+#  - references.bib
 
-sphinx:
-  config:
-    exclude_patterns:
-      - README.md
-    myst_enable_extensions: 
-    - amsmath
-    - dollarmath
-    - html_image
-    - html_admonition
+#sphinx:
+#  config:
+#    exclude_patterns:
+#      - README.md
+#    myst_enable_extensions: 
+#    - amsmath
+#    - dollarmath
+#    - html_image
+#    - html_admonition
