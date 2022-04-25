@@ -1,15 +1,20 @@
+import matplotlib
+matplotlib.use('Agg')
 import ligotools as lg
 from ligotools import readligo as rl
 from ligotools.utils import write_wavfile, reqshift, whiten, plot_code
 #from readligo import FileList
 import matplotlib.mlab as mlab
+import matplotlib.pyplot as plt
 import json
 from ligotools import utils as ut
 from scipy.interpolate import interp1d
 import os
 from os import path
+from os.path import exists
 import numpy as np
 from scipy.signal import butter, filtfilt
+from os import remove
 
 fn_L1 = "data/L-L1_LOSC_4_V2-1126259446-32.hdf5"
 fn_H1 = "data/H-H1_LOSC_4_V2-1126259446-32.hdf5"
@@ -54,15 +59,15 @@ dt_L1 = time_H1[1] - time_H1[0]
 
 def test_whiten():
 	wh = whiten(strain_H1, psd_H1, dt_H1)
-    assert len(wh) == 131072
+	assert len(wh) == 131072
 
 def test_write_wavfile():
 	wh = whiten(strain_H1, psd_H1, dt_H1)
 	write_wavfile("audio/temp.wav", 4096, wh)
-	assert path.isfile('audio/GW150914_H1_whitenbp.wav') == True
+	assert path.isfile('audio/GW150914_H1_shifted.wav') == True
 
 def test_reqshift():
-	wl = whiten(strin_L1, psd_L1, dt_L1)
+	wl = whiten(strain_L1, psd_L1, dt_L1)
 	strain_L1_shift = reqshift(wl, 400.0, 4096)
 	assert len(strain_L1_shift) == 131072
 
@@ -71,8 +76,8 @@ def test_plot_code():
 	wl = whiten(strain_L1, psd_L1, dt_L1)
 	strain_L1_whitenbp = filtfilt(bb, ab, wl) / normalization
 	plot_code(0, 0, 1126259462.4324, 13.2, 'GW150914', 'png', 
-                        1126259462.44, 0, 0, 999.74, 0, 0, 4096, 'g', 'L1', strain_L1_whitenbp)
-	assert exists('figures/'+'GW150914'+"_"+"L1"+"_matchtime."+"png")
-	remove('figures/'+'GW150914'+"_"+"L1"+"_matchtime."+"png")
-	
-	
+                        1126259462.44, 0, 0, 999.74, 0, 0, 4096, 'g', 'L1', 0)
+	#plot_code(0, 0, 0, 13.2, 'GW150914', 'png', 
+                   #     0, 0, 0, 0, 0, 0, 4096, 'g', 'L1', strain_L1_whitenbp)
+	assert exists('figurs/'+'GW150914'+"_"+"L1"+"_matchfreq."+"png")
+	remove('figurs/'+'GW150914'+"_"+"L1"+"_matchfreq."+"png")
