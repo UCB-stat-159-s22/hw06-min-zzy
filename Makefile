@@ -5,7 +5,7 @@ env:
 
 .PHONY: html
 html:
-	jupyterbook build .
+	jupyter-book build .
 
 .PHONY: html-hub
 html-hub:
