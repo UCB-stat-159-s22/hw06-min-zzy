@@ -20,7 +20,6 @@ def whiten(strain, interp_psd, dt):
 def write_wavfile(filename,fs,data):
     d = np.int16(data/np.max(np.abs(data)) * 32767 * 0.9)
     wavfile.write(filename,int(fs), d)
-	
 
 # function that shifts frequency of a band-passed signal
 def reqshift(data,fshift=100,sample_rate=4096):
@@ -37,20 +36,8 @@ def reqshift(data,fshift=100,sample_rate=4096):
     return z
 
 # function that plot the graph that is in the index.ipynb file
-def plot_code(make_plots, det, strain_L1_whitenbp, strain_H1_whitenbp, template_match, time, timemax, SNR, eventname,                  plottype, tevent,template_fft, datafreq, d_eff, freqs, data_psd, fs):
-	if make_plots:
-
-        # plotting changes for the detectors:
-        if det is 'L1': 
-            pcolor='g'
-            strain_whitenbp = strain_L1_whitenbp
-            template_L1 = template_match.copy()
-        else:
-            pcolor='r'
-            strain_whitenbp = strain_H1_whitenbp
-            template_H1 = template_match.copy()
-
-        # -- Plot the result
+def plot_code(template_match, time, timemax, SNR, eventname, plottype, tevent, template_fft, datafreq, d_eff, freqs, data_psd, fs, pcolor, det, strain_whitenbp):
+    # -- Plot the result
         plt.figure(figsize=(10,8))
         plt.subplot(2,1,1)
         plt.plot(time-timemax, SNR, pcolor,label=det+' SNR(t)')
@@ -109,4 +96,4 @@ def plot_code(make_plots, det, strain_L1_whitenbp, strain_H1_whitenbp, template_
         plt.ylabel('strain noise ASD (strain/rtHz), template h(f)*rt(f)')
         plt.legend(loc='upper left')
         plt.title(det+' ASD and template around event')
-        plt.savefig(eventname+"_"+det+"_matchfreq."+plottype)
+        plt.savefig("figurs/" + eventname+"_"+det+"_matchfreq."+plottype)
