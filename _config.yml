@@ -8,6 +8,11 @@ execute:
 
 only_build_toc_files: true
 
+# Information about where the book exists on the web
+repository:
+  url: https://github.com/executablebooks/jupyter-book  # Online location of your book
+  branch: master  # Which branch of the repository should be used when creating links (optional)
+
 # TODO: the below should be disabled and instead the sphinx section activated
 # after we upgrade to j-book newer than 0.9.1 and its dependencies.  For now
 # this gives us the equivalent of html_images fixes, but without version
